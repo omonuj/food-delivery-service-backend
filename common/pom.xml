@@ -5,21 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>brightlogic</groupId>
-        <artifactId>order-service</artifactId>
+        <artifactId>food-ordering-system</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>order-messaging</artifactId>
+    <artifactId>common</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>common-domain</module>
+    </modules>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>brightlogic</groupId>
-            <artifactId>order-application-service</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>

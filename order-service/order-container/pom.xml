@@ -8,11 +8,31 @@
         <artifactId>order-service</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>order-container</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
+    <dependencies>
+        <dependency>
+            <groupId>brightlogic</groupId>
+            <artifactId>order-domain-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>brightlogic</groupId>
+            <artifactId>order-application-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>brightlogic</groupId>
+            <artifactId>order-application</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>brightlogic</groupId>
+            <artifactId>order-data-access</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>brightlogic</groupId>
+            <artifactId>order-messaging</artifactId>
+        </dependency>
+    </dependencies>
 </project>
