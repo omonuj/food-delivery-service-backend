@@ -68,6 +68,4 @@ public class OrderDataMapper {
                 orderAddress.getPostalCode(),
                 orderAddress.getCity());
     }
-
-
 }
