@@ -9,11 +9,10 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-@Builder
 @Getter
+@Builder
 @AllArgsConstructor
 public class PaymentResponse {
-
     private String id;
     private String sagaId;
     private String orderId;
@@ -23,5 +22,4 @@ public class PaymentResponse {
     private Instant createdAt;
     private PaymentStatus paymentStatus;
     private List<String> failureMessages;
-
 }
