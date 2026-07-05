@@ -1,6 +1,13 @@
 server:
   port: 8181
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+  api-docs:
+    path: /v3/api-docs
+
 logging:
   level:
     com.food.ordering.system: DEBUG

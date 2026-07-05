@@ -1,0 +1,134 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Food Ordering System — Order Service API",
+    "description": "REST API of the Order Service, the SAGA orchestrator of an event-driven, DDD / hexagonal food-ordering platform. Create orders and track their status through the PENDING → PAID → APPROVED / CANCELLED lifecycle. Payment, Restaurant and Customer services communicate over Kafka and expose no public REST endpoints.",
+    "contact": { "name": "Food Ordering System" },
+    "license": { "name": "Apache 2.0" },
+    "version": "v1"
+  },
+  "servers": [
+    { "url": "http://localhost:8181", "description": "Local container" }
+  ],
+  "tags": [
+    { "name": "Orders", "description": "Create orders and track their SAGA lifecycle" }
+  ],
+  "paths": {
+    "/orders": {
+      "post": {
+        "tags": ["Orders"],
+        "summary": "Create an order",
+        "description": "Places a new order and starts the payment/approval SAGA. Returns a tracking id.",
+        "operationId": "createOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateOrderCommand" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created; SAGA started",
+            "content": {
+              "application/vnd.api.v1+json": {
+                "schema": { "$ref": "#/components/schemas/CreateOrderResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid order payload" }
+        }
+      }
+    },
+    "/orders/{trackingId}": {
+      "get": {
+        "tags": ["Orders"],
+        "summary": "Track an order",
+        "description": "Returns the current status of an order by its tracking id.",
+        "operationId": "getOrderByTrackingId",
+        "parameters": [
+          {
+            "name": "trackingId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status returned",
+            "content": {
+              "application/vnd.api.v1+json": {
+                "schema": { "$ref": "#/components/schemas/TrackOrderResponse" }
+              }
+            }
+          },
+          "404": { "description": "No order found for the tracking id" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrderStatus": {
+        "type": "string",
+        "enum": ["PENDING", "PAID", "APPROVED", "CANCELLING", "CANCELLED"]
+      },
+      "OrderAddress": {
+        "type": "object",
+        "required": ["street", "postalCode", "city"],
+        "properties": {
+          "street": { "type": "string", "example": "123 Market St" },
+          "postalCode": { "type": "string", "example": "10001" },
+          "city": { "type": "string", "example": "New York" }
+        }
+      },
+      "OrderItem": {
+        "type": "object",
+        "required": ["productId", "quantity", "price", "subTotal"],
+        "properties": {
+          "productId": { "type": "string", "format": "uuid" },
+          "quantity": { "type": "integer", "format": "int32", "example": 2 },
+          "price": { "type": "number", "example": 25.00 },
+          "subTotal": { "type": "number", "example": 50.00 }
+        }
+      },
+      "CreateOrderCommand": {
+        "type": "object",
+        "required": ["customerId", "restaurantId", "price", "items", "address"],
+        "properties": {
+          "customerId": { "type": "string", "format": "uuid" },
+          "restaurantId": { "type": "string", "format": "uuid" },
+          "price": { "type": "number", "example": 50.00 },
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OrderItem" }
+          },
+          "address": { "$ref": "#/components/schemas/OrderAddress" }
+        }
+      },
+      "CreateOrderResponse": {
+        "type": "object",
+        "required": ["orderTrackingId", "orderStatus", "message"],
+        "properties": {
+          "orderTrackingId": { "type": "string", "format": "uuid" },
+          "orderStatus": { "$ref": "#/components/schemas/OrderStatus" },
+          "message": { "type": "string", "example": "Order created successfully" }
+        }
+      },
+      "TrackOrderResponse": {
+        "type": "object",
+        "required": ["orderTrackingId", "orderStatus"],
+        "properties": {
+          "orderTrackingId": { "type": "string", "format": "uuid" },
+          "orderStatus": { "$ref": "#/components/schemas/OrderStatus" },
+          "failureMessages": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
