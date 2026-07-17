@@ -4,17 +4,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class StreetAddress {
-
     private final UUID id;
     private final String street;
-    private final String city;
     private final String postalCode;
+    private final String city;
 
-    public StreetAddress(UUID id, String street, String city, String postalCode) {
+    public StreetAddress(UUID id, String street, String postalCode, String city) {
         this.id = id;
         this.street = street;
-        this.city = city;
         this.postalCode = postalCode;
+        this.city = city;
     }
 
     public UUID getId() {
@@ -25,12 +24,12 @@ public class StreetAddress {
         return street;
     }
 
-    public String getCity() {
-        return city;
-    }
-
     public String getPostalCode() {
         return postalCode;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     @Override
@@ -38,11 +37,11 @@ public class StreetAddress {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StreetAddress that = (StreetAddress) o;
-        return Objects.equals(id, that.id) && Objects.equals(street, that.street) && Objects.equals(city, that.city) && Objects.equals(postalCode, that.postalCode);
+        return street.equals(that.street) && postalCode.equals(that.postalCode) && city.equals(that.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, street, city, postalCode);
+        return Objects.hash(street, postalCode, city);
     }
 }
